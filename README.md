@@ -34,26 +34,26 @@ Technology Stack
 System Components
 
  1. Knowledge Base (`knowledge-base.js`)
-Contains all crop data, symptoms and disease rules
-Defines 10+ diseases with treatment and prevention recommendations
-Provides helper methods to access crop-specific information
+- Contains all crop data, symptoms and disease rules
+- Defines 10+ diseases with treatment and prevention recommendations
+- Provides helper methods to access crop-specific information
 
  2. Inference Engine (`inference-engine.js`)
-Core diagnostic logic using forward chaining
-Matches user symptoms against disease rules
-Calculates confidence scores based on symptom overlap
-Supports partial matching (60% threshold for diagnosis)
+- Core diagnostic logic using forward chaining
+- Matches user symptoms against disease rules
+- Calculates confidence scores based on symptom overlap
+- Supports partial matching (60% threshold for diagnosis)
 
 3. Explanation Facility (`explanation-facility.js`)
-Generates human readable explanations of diagnoses
-Creates educational content about identified diseases
-Formats symptoms and provides detailed rule breakdowns
+- Generates human readable explanations of diagnoses
+- Creates educational content about identified diseases
+- Formats symptoms and provides detailed rule breakdowns
 
 4. Main Application (`main.js`)
-Handles UI interactions and form submissions
-Manages diagnosis workflow
-Displays results and history
-Provides utility functions for alerts and loading states
+- Handles UI interactions and form submissions
+- Manages diagnosis workflow
+- Displays results and history
+- Provides utility functions for alerts and loading states
 
 Supported Crops and Diseases
 
