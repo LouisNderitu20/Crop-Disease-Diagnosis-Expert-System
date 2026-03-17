@@ -78,27 +78,8 @@ Beans
 Installation and Setup
 
 1. Clone or download the repository
-2. Ensure the following folder structure:
-```
-crop-doctor/
-├── index.html
-├── pages/
-│   ├── diagnose.html
-│   ├── history.html
-│   └── knowledge-base.html
-├── css/
-│   └── style.css
-├── js/
-│   ├── knowledge-base.js
-│   ├── inference-engine.js
-│   ├── explanation-facility.js
-│   └── main.js
-└── images/
-    └── (crop images)
-```
-
-3. Open `index.html` in a modern web browser
-4. No server or database required - runs entirely in the browser
+2. Open `index.html` in a modern web browser
+3. No server or database required, It runs entirely in the browser
 
 Usage Guide
 
