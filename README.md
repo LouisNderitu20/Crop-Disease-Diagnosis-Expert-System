@@ -1,153 +1,70 @@
-Crop Doctor - Expert System for Crop Disease Diagnosis
+# Getting Started with Create React App
 
-Overview
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-Crop Doctor is a web based expert system designed to help farmers and agricultural professionals diagnose crop diseases based on observed symptoms. The application uses a rule based inference engine to analyze user inputs and provide accurate disease identification along with treatment recommendations and preventive measures.
+## Available Scripts
 
-Features
+In the project directory, you can run:
 
-Core Functionality
-- Interactive Diagnosis: Step by step questionnaire to identify crop diseases
-- Multi Crop Support: Currently supports Maize, Tomato, Potato and Beans
-- Symptom Based Analysis: Users select observed symptoms from crop specific checklists
-- Environmental Factors: Optional input for conditions like high humidity or recent rainfall
-- Confidence Scoring: Each diagnosis includes a confidence percentage based on symptom matching
+### `npm start`
 
-Knowledge Management
-- Comprehensive Knowledge Base: Contains 10+ disease rules with symptoms, treatments, and prevention strategies
-- Educational Content: Provides disease descriptions, historical facts, and learning resources
-- Explanation Facility: Detailed breakdown of how each diagnosis was reached
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-User Features
-- Diagnosis History: Automatically saves previous diagnoses for future reference
-- Print Reports: Generate printable diagnosis reports
-- Knowledge Base Viewer: Browse all disease rules and treatments
-- Responsive Design: Works on desktops
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-Technology Stack
+### `npm test`
 
-- Frontend: HTML5, CSS3, JavaScript (ES6+)
-- Icons: Font Awesome 6
-- Storage: LocalStorage for history persistence
-- Architecture: Modular JavaScript with separate classes for knowledge base, inference engine and explanation facility
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-System Components
+### `npm run build`
 
- 1. Knowledge Base (`knowledge-base.js`)
-- Contains all crop data, symptoms and disease rules
-- Defines 10+ diseases with treatment and prevention recommendations
-- Provides helper methods to access crop-specific information
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
- 2. Inference Engine (`inference-engine.js`)
-- Core diagnostic logic using forward chaining
-- Matches user symptoms against disease rules
-- Calculates confidence scores based on symptom overlap
-- Supports partial matching (60% threshold for diagnosis)
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-3. Explanation Facility (`explanation-facility.js`)
-- Generates human readable explanations of diagnoses
-- Creates educational content about identified diseases
-- Formats symptoms and provides detailed rule breakdowns
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-4. Main Application (`main.js`)
-- Handles UI interactions and form submissions
-- Manages diagnosis workflow
-- Displays results and history
-- Provides utility functions for alerts and loading states
+### `npm run eject`
 
-Supported Crops and Diseases
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-Maize
-- Maize Lethal Necrosis
-- Northern Leaf Blight
-- Stalk Rot
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Tomato
-- Tomato Bacterial Wilt
-- Tomato Late Blight
-- Tomato Yellow Leaf Curl Virus
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-Potato
-- Potato Late Blight
-- Potato Bacterial Soft Rot
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-Beans
-- Bean Rust
-- Bean Angular Leaf Spot
+## Learn More
 
-Installation and Setup
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-1. Clone or download the repository
-2. Open `index.html` in a modern web browser
-3. No server or database required, It runs entirely in the browser
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-Usage Guide
+### Code Splitting
 
-Diagnosing a Crop
-1. Navigate to "Diagnose Crop" page
-2. Select your crop type from the dropdown
-3. Check all observed symptoms from the generated list
-4. (Optional) Select relevant environmental factors
-5. Click "Get Diagnosis" to receive results
-6. View detailed diagnosis with treatment recommendations
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-Viewing History
-Access previous diagnoses from the "Diagnosis History" page
-Each entry shows date, crop, diagnosis, and confidence level
-Option to clear history
+### Analyzing the Bundle Size
 
-Exploring Knowledge Base
-Browse all disease rules organized by crop
-View symptoms, confidence levels and treatment recommendations
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-Customization
+### Making a Progressive Web App
 
-Adding New Crops
-1. Add crop to `KnowledgeBase.crops` array
-2. Define symptoms in `KnowledgeBase.symptoms[crop]`
-3. Create disease rules in `KnowledgeBase.rules` with appropriate crop value
-4. Update UI elements if needed
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-Adding New Diseases
-```javascript
-{
-    id: 'rule_xxx',
-    crop: 'crop_name',
-    condition: { 
-        symptoms: ['symptom_id1', 'symptom_id2'],
-        environmental: ['factor_name']
-    },
-    then: {
-        disease: 'Disease Name',
-        confidence: 0.85,
-        treatment: ['Treatment step 1', 'Treatment step 2'],
-        prevention: ['Prevention step 1', 'Prevention step 2']
-    }
-}
-```
+### Advanced Configuration
 
-Browser Support
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-- Chrome (recommended)
-- Firefox
-- Edge
-- Opera
+### Deployment
 
-Limitations
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-- Currently supports only 4 crops with 10 diseases
-- No multilingual support (English only)
-- Limited to rule based inference (no machine learning)
-- Environmental factors are optional and may affect accuracy
-- History storage limited to browser localStorage (20 entries max)
+### `npm run build` fails to minify
 
-Future Enhancements
-
-1. Add more crops and diseases
-2. Implement image recognition for symptom identification
-3. Add multilingual support
-4. Include weather data API integration
-5. Develop mobile app version
-6. Add expert consultation feature
-7. Implement user accounts for cloud history storage
-
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
