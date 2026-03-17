@@ -7,29 +7,29 @@ Crop Doctor is a web based expert system designed to help farmers and agricultur
 Features
 
 Core Functionality
-Interactive Diagnosis: Step by step questionnaire to identify crop diseases
-Multi Crop Support: Currently supports Maize, Tomato, Potato and Beans
-Symptom Based Analysis: Users select observed symptoms from crop specific checklists
-Environmental Factors: Optional input for conditions like high humidity or recent rainfall
-Confidence Scoring: Each diagnosis includes a confidence percentage based on symptom matching
+- Interactive Diagnosis: Step by step questionnaire to identify crop diseases
+- Multi Crop Support: Currently supports Maize, Tomato, Potato and Beans
+- Symptom Based Analysis: Users select observed symptoms from crop specific checklists
+- Environmental Factors: Optional input for conditions like high humidity or recent rainfall
+- Confidence Scoring: Each diagnosis includes a confidence percentage based on symptom matching
 
 Knowledge Management
-Comprehensive Knowledge Base: Contains 10+ disease rules with symptoms, treatments, and prevention strategies
-Educational Content: Provides disease descriptions, historical facts, and learning resources
-Explanation Facility: Detailed breakdown of how each diagnosis was reached
+- Comprehensive Knowledge Base: Contains 10+ disease rules with symptoms, treatments, and prevention strategies
+- Educational Content: Provides disease descriptions, historical facts, and learning resources
+- Explanation Facility: Detailed breakdown of how each diagnosis was reached
 
 User Features
-Diagnosis History: Automatically saves previous diagnoses for future reference
-Print Reports: Generate printable diagnosis reports
-Knowledge Base Viewer: Browse all disease rules and treatments
-Responsive Design: Works on desktops
+- Diagnosis History: Automatically saves previous diagnoses for future reference
+- Print Reports: Generate printable diagnosis reports
+- Knowledge Base Viewer: Browse all disease rules and treatments
+- Responsive Design: Works on desktops
 
 Technology Stack
 
-Frontend: HTML5, CSS3, JavaScript (ES6+)
-Icons: Font Awesome 6
-Storage: LocalStorage for history persistence
-Architecture: Modular JavaScript with separate classes for knowledge base, inference engine and explanation facility
+- Frontend: HTML5, CSS3, JavaScript (ES6+)
+- Icons: Font Awesome 6
+- Storage: LocalStorage for history persistence
+- Architecture: Modular JavaScript with separate classes for knowledge base, inference engine and explanation facility
 
 System Components
 
