@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  fullName  String
+  history   Diagnosis[]
+  createdAt DateTime @default(now())
+}
+
+model Crop {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  symptoms  Symptom[]
+  rules     Rule[]
+  diagnoses Diagnosis[]
+}
+
+model Symptom {
+  id          Int      @id @default(autoincrement())
+  symptomId   String   // e.g., 'yellow_leaves'
+  description String
+  cropId      Int
+  crop        Crop     @relation(fields: [cropId], references: [id])
+
+  @@unique([symptomId, cropId])
+}
+
+model Disease {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  treatment   String
+  prevention  String
+  facts       String?
+  rules       Rule[]
+  diagnoses   Diagnosis[]
+}
+
+model Rule {
+  id                   Int     @id @default(autoincrement())
+  ruleId               String  @unique // e.g., 'rule_001'
+  cropId               Int
+  crop                 Crop    @relation(fields: [cropId], references: [id])
+  conditionSymptoms    String
+  conditionEnv         String?
+  diseaseId            Int
+  disease              Disease @relation(fields: [diseaseId], references: [id])
+  confidence           Float
+}
+
+model Diagnosis {
+  id         Int      @id @default(autoincrement())
+  userId     Int?
+  user       User?    @relation(fields: [userId], references: [id])
+  date       DateTime @default(now())
+  cropId     Int
+  crop       Crop     @relation(fields: [cropId], references: [id])
+  symptoms   String // JSON list of symptoms matched
+  diseaseId  Int
+  disease    Disease  @relation(fields: [diseaseId], references: [id])
+  confidence Float
+}

@@ -164,8 +164,4 @@ class InferenceEngine {
     }
 }
 
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = InferenceEngine;
-} else {
-    window.InferenceEngine = InferenceEngine;
-}
+export default InferenceEngine;

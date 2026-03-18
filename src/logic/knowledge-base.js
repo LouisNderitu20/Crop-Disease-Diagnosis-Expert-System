@@ -260,8 +260,4 @@ const KnowledgeBase = {
     }
 };
 
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = KnowledgeBase;
-} else {
-    window.KnowledgeBase = KnowledgeBase;
-}
+export default KnowledgeBase;
