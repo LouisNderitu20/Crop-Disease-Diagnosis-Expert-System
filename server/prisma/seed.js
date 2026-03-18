@@ -236,20 +236,17 @@ const knowledgeBaseData = {
 async function main() {
     console.log('Start seeding...');
 
-    // Clear existing data
     await prisma.diagnosis.deleteMany();
     await prisma.rule.deleteMany();
     await prisma.symptom.deleteMany();
     await prisma.disease.deleteMany();
     await prisma.crop.deleteMany();
 
-    // Seed Crops
     for (const cropName of knowledgeBaseData.crops) {
         const crop = await prisma.crop.create({
             data: { name: cropName }
         });
 
-        // Seed Symptoms for this crop
         const symptoms = knowledgeBaseData.symptoms[cropName] || [];
         for (const s of symptoms) {
             await prisma.symptom.create({
@@ -262,7 +259,6 @@ async function main() {
         }
     }
 
-    // Seed Diseases and Rules
     for (const r of knowledgeBaseData.rules) {
         let disease = await prisma.disease.findUnique({
             where: { name: r.then.disease }

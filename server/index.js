@@ -10,7 +10,6 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// --- Inference Logic (Ported from Frontend) ---
 class BackendInferenceEngine {
     constructor(knowledgeBase) {
         this.knowledgeBase = knowledgeBase;
@@ -24,7 +23,6 @@ class BackendInferenceEngine {
             this.currentSymptoms = userSymptoms;
             this.matchedRules = [];
 
-            // Fetch rules from DB for this crop
             const crop = await prisma.crop.findUnique({
                 where: { name: cropType },
                 include: {
@@ -49,7 +47,12 @@ class BackendInferenceEngine {
                         ruleId: rule.ruleId,
                         matchedSymptoms: matchResult.matchedSymptoms,
                         confidence: matchResult.confidence,
-                        disease: rule.disease.name
+                        disease: rule.disease.name,
+                        rule: {
+                            id: rule.ruleId,
+                            condition: { symptoms: conditionSymptoms },
+                            then: { disease: rule.disease.name }
+                        }
                     });
 
                     possibleDiagnoses.push({
@@ -103,9 +106,8 @@ class BackendInferenceEngine {
     }
 }
 
-// --- API Routes ---
 
-// Get all supported crops
+
 app.get('/api/crops', async (req, res) => {
     try {
         const crops = await prisma.crop.findMany({
@@ -117,7 +119,6 @@ app.get('/api/crops', async (req, res) => {
     }
 });
 
-// Perform Diagnosis
 app.post('/api/diagnose', async (req, res) => {
     const { crop: cropName, symptoms, environmental, userId } = req.body;
 
@@ -125,11 +126,10 @@ app.post('/api/diagnose', async (req, res) => {
         const engine = new BackendInferenceEngine();
         const result = await engine.diagnose(cropName, symptoms, environmental);
 
-        // Save to history if diagnosis exists
         if (result.diagnoses.length > 0) {
             const top = result.diagnoses[0];
             const crop = await prisma.crop.findUnique({ where: { name: cropName } });
-            
+
             await prisma.diagnosis.create({
                 data: {
                     userId: userId || null,
@@ -147,7 +147,6 @@ app.post('/api/diagnose', async (req, res) => {
     }
 });
 
-// Get history
 app.get('/api/history', async (req, res) => {
     const { userId } = req.query;
     try {
@@ -166,7 +165,6 @@ app.get('/api/history', async (req, res) => {
     }
 });
 
-// Auth (Simplified for now)
 app.post('/api/auth/register', async (req, res) => {
     const { email, password, fullName } = req.body;
     try {

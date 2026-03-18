@@ -22,7 +22,7 @@
 }
 
 body {
-    font-family: 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background: var(--bg);
     color: var(--text-dark);
     line-height: 1.6;
@@ -381,9 +381,8 @@ h2 {
     padding: 1.5rem;
     border-radius: var(--radius);
     white-space: pre-line;
-    font-family: 'Courier New', monospace;
-    font-size: 0.95rem;
-    line-height: 1.8;
+    font-size: 1rem;
+    line-height: 1.6;
 }
 
 .diagnosis-actions {

@@ -1,4 +1,4 @@
-// explanation-facility.js
+
 class ExplanationFacility {
     constructor() {
         this.explanationHistory = [];
@@ -126,15 +126,15 @@ class ExplanationFacility {
 
         let explanation = `Our system identified ${rule.then.disease} because:\n\n`;
 
-        explanation += '✓ Symptoms you reported that match this disease:\n';
+        explanation += ' Symptoms you reported that match this disease:\n';
         if (matched.length > 0) {
-            matched.forEach(s => explanation += `  • ${this.formatSymptom(s)}\n`);
+            matched.forEach(s => explanation += ` ${this.formatSymptom(s)}\n`);
         } else {
-            explanation += '  • No matching symptoms reported\n';
+            explanation += ' No matching symptoms reported\n';
         }
 
         if (missing.length > 0) {
-            explanation += '\n⚠ Symptoms of this disease you did not report:\n';
+            explanation += '\n Symptoms of this disease you did not report:\n';
             missing.forEach(s => explanation += `  • ${this.formatSymptom(s)}\n`);
         }
 

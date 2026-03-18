@@ -27,8 +27,8 @@ const Diagnose = () => {
     };
 
     const handleSymptomToggle = (symptomId) => {
-        setSymptoms(prev => 
-            prev.includes(symptomId) 
+        setSymptoms(prev =>
+            prev.includes(symptomId)
                 ? prev.filter(id => id !== symptomId)
                 : [...prev, symptomId]
         );
@@ -45,7 +45,7 @@ const Diagnose = () => {
 
         setLoading(true);
         const user = JSON.parse(localStorage.getItem('user') || 'null');
-        
+
         try {
             const response = await fetch('/api/diagnose', {
                 method: 'POST',
@@ -59,8 +59,7 @@ const Diagnose = () => {
             });
 
             const diagResult = await response.json();
-            
-            // Still use ExplanationFacility on frontend as it's formatting logic
+
             const explainer = new ExplanationFacility();
             const diagExplanation = explainer.generateExplanation(diagResult, { crop, symptoms, environmental: envFactors });
 
@@ -88,7 +87,7 @@ const Diagnose = () => {
             <div className="form-group">
                 <label htmlFor="cropSelect">Select Crop Type:</label>
                 <select id="cropSelect" value={crop} onChange={handleCropChange} required>
-                    <option value="">-- Choose a crop --</option>
+                    <option value=""> Choose a crop </option>
                     {crops.map(c => (
                         <option key={c.id} value={c.name}>{c.name.charAt(0).toUpperCase() + c.name.slice(1)}</option>
                     ))}
@@ -102,9 +101,9 @@ const Diagnose = () => {
                         <div className="symptom-options">
                             {selectedCropData.symptoms.map(s => (
                                 <div key={s.id} className="symptom-option">
-                                    <input 
-                                        type="checkbox" 
-                                        id={s.symptomId} 
+                                    <input
+                                        type="checkbox"
+                                        id={s.symptomId}
                                         checked={symptoms.includes(s.symptomId)}
                                         onChange={() => handleSymptomToggle(s.symptomId)}
                                     />
@@ -123,18 +122,18 @@ const Diagnose = () => {
                     <label>Environmental Factors (optional):</label>
                     <div className="symptom-options">
                         <div className="symptom-option">
-                            <input 
-                                type="checkbox" 
-                                id="high_humidity" 
+                            <input
+                                type="checkbox"
+                                id="high_humidity"
                                 checked={envFactors.high_humidity}
                                 onChange={() => handleEnvToggle('high_humidity')}
                             />
                             <label htmlFor="high_humidity">High humidity conditions</label>
                         </div>
                         <div className="symptom-option">
-                            <input 
-                                type="checkbox" 
-                                id="recent_rain" 
+                            <input
+                                type="checkbox"
+                                id="recent_rain"
                                 checked={envFactors.recent_rain}
                                 onChange={() => handleEnvToggle('recent_rain')}
                             />
@@ -175,7 +174,7 @@ const Diagnose = () => {
                         <div className="alert alert-success">
                             <strong>Confidence Level:</strong> {Math.round(topDiagnosis.confidence * 100)}%
                         </div>
-                        
+
                         <div className="treatment-section">
                             <h4>Recommended Treatment:</h4>
                             <ul>
@@ -222,9 +221,9 @@ const Diagnose = () => {
             <h1 style={{ textAlign: 'center', color: 'var(--primary-dark)', marginBottom: '2rem' }}>
                 Crop Disease Diagnosis
             </h1>
-            
+
             {loading && <div id="loadingSpinner" style={{ display: 'block' }}></div>}
-            
+
             {!result ? renderForm() : renderResults()}
         </div>
     );

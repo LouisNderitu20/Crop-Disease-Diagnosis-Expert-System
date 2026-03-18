@@ -8,7 +8,6 @@ const KnowledgeBasePage = () => {
         fetch('/api/crops')
             .then(res => res.json())
             .then(data => {
-                // Fetch rules for each crop would be better, but let's assume /api/crops returns enough or we add a route
                 setCrops(data);
                 setLoading(false);
             })
