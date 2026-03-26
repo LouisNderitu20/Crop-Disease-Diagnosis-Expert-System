@@ -204,13 +204,15 @@ app.post('/api/diagnose', upload.single('image'), async (req, res) => {
             const crop = await prisma.crop.findUnique({ where: { name: cropName } });
             
             if (crop) {
-                // Check if user exists to avoid foreign key violation after re-seeding
+                // Check if user exists to avoid foreign key violation
                 let validUserId = null;
-                if (userId) {
+                const parsedUserId = parseInt(userId);
+                if (!isNaN(parsedUserId)) {
                     try {
-                        const userExists = await prisma.user.findUnique({ where: { id: parseInt(userId) } });
+                        const userExists = await prisma.user.findUnique({ where: { id: parsedUserId } });
                         if (userExists) validUserId = userExists.id;
                     } catch (e) {
+                        logger.error(`User check error: ${e.message}`);
                         validUserId = null;
                     }
                 }
@@ -226,6 +228,8 @@ app.post('/api/diagnose', upload.single('image'), async (req, res) => {
                     }
                 });
                 diagnosisId = diagnosis.id;
+            } else {
+                logger.warn(`Diagnosis created but crop '${cropName}' not found in DB`);
             }
         }
 
@@ -279,6 +283,12 @@ app.post('/api/auth/login', async (req, res) => {
     try {
         const user = await prisma.user.findUnique({ where: { email } });
         if (user && await bcrypt.compare(password, user.password)) {
+            // Update last login
+            await prisma.user.update({
+                where: { id: user.id },
+                data: { lastLogin: new Date() }
+            });
+            
             logger.info(`User logged in: ${email}`);
             res.json({ id: user.id, email: user.email, fullName: user.fullName, role: user.role, createdAt: user.createdAt });
         } else {
@@ -463,7 +473,7 @@ app.get('/api/admin/stats', authorize(['ADMIN']), async (req, res) => {
 app.get('/api/admin/users', authorize(['ADMIN']), async (req, res) => {
     try {
         const users = await prisma.user.findMany({
-            select: { id: true, email: true, fullName: true, role: true, createdAt: true },
+            select: { id: true, email: true, fullName: true, role: true, createdAt: true, lastLogin: true },
             orderBy: { createdAt: 'desc' }
         });
         res.json(users);
