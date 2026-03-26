@@ -1,4 +1,3 @@
-// inference-engine.js
 class InferenceEngine {
     constructor(knowledgeBase) {
         this.knowledgeBase = knowledgeBase;

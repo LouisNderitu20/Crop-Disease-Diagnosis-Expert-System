@@ -1,4 +1,3 @@
-
 class ExplanationFacility {
     constructor() {
         this.explanationHistory = [];
@@ -160,7 +159,7 @@ class ExplanationFacility {
             'leaf_curling': 'Leaf curling',
             'brown_lesions': 'Brown lesions',
             'tuber_rot': 'Tuber rot',
-            'rust_pustules': 'Rust-colored pustules',
+            'rust_pustules': 'Rust colored pustules',
             'leaf_spot': 'Leaf spots',
             'stunted': 'Stunted growth'
         };
@@ -171,14 +170,14 @@ class ExplanationFacility {
     getDiseaseDescription(diseaseName) {
         const descriptions = {
             'Maize Lethal Necrosis': 'A viral disease that affects maize, causing yellowing and death of plants. It is spread by insects like thrips and aphids.',
-            'Northern Leaf Blight': 'A fungal disease causing long, gray-green lesions on leaves. It thrives in cool, wet conditions.',
+            'Northern Leaf Blight': 'A fungal disease causing long, gray green lesions on leaves. It thrives in cool, wet conditions.',
             'Stalk Rot': 'Fungal disease causing rotting of maize stalks, leading to lodging and yield loss.',
             'Tomato Bacterial Wilt': 'Bacterial disease causing rapid wilting and death of tomato plants.',
             'Tomato Late Blight': 'Serious fungal disease affecting tomatoes, causing dark lesions on leaves and fruit rot.',
             'Tomato Yellow Leaf Curl Virus': 'Viral disease spread by whiteflies, causing stunting and leaf curling.',
             'Potato Late Blight': 'Historic fungal disease that caused the Irish Potato Famine. Affects leaves and tubers.',
             'Potato Bacterial Soft Rot': 'Bacterial disease causing soft rotting of potato tubers.',
-            'Bean Rust': 'Fungal disease causing rust-colored pustules on bean leaves.',
+            'Bean Rust': 'Fungal disease causing rust colored pustules on bean leaves.',
             'Bean Angular Leaf Spot': 'Bacterial disease causing angular spots on bean leaves.'
         };
 

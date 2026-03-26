@@ -75,7 +75,6 @@ nav a {
 nav a:hover,
 nav a.active {
     color: var(--primary);
-    border-bottom: 2px solid var(--primary);
 }
 
 .hero {
@@ -312,7 +311,6 @@ h2 {
     border-radius: var(--radius);
     margin-bottom: 0.5rem;
     font-weight: 500;
-    border-left: 5px solid transparent;
     box-shadow: var(--shadow);
     animation: slideDown 0.3s ease;
     cursor: pointer;
@@ -323,10 +321,10 @@ h2 {
     to { opacity: 1; transform: translateY(0); }
 }
 
-.alert-error { background: #ffebee; color: var(--danger); border-left-color: var(--danger); }
-.alert-success { background: #e8f5e9; color: var(--success); border-left-color: var(--success); }
-.alert-warning { background: #fff3e0; color: var(--secondary); border-left-color: var(--secondary); }
-.alert-info { background: #e3f2fd; color: var(--info); border-left-color: var(--info); }
+.alert-error { background: #ffebee; color: var(--danger); }
+.alert-success { background: #e8f5e9; color: var(--success); }
+.alert-warning { background: #fff3e0; color: var(--secondary); }
+.alert-info { background: #e3f2fd; color: var(--info); }
 
 .diagnosis-card {
     background: var(--white);
@@ -377,7 +375,6 @@ h2 {
 
 .explanation-box {
     background: #e8f5e9;
-    border-left: 5px solid var(--primary);
     padding: 1.5rem;
     border-radius: var(--radius);
     white-space: pre-line;
@@ -423,7 +420,6 @@ h2 {
     background: var(--white);
     padding: 1.5rem;
     border-radius: var(--radius);
-    border-left: 5px solid var(--primary);
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     transition: all 0.3s ease;
 }

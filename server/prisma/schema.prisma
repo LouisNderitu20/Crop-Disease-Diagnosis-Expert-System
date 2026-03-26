@@ -12,8 +12,11 @@ model User {
   email     String   @unique
   password  String
   fullName  String
+  role      String   @default("FARMER") // ADMIN or FARMER
   history   Diagnosis[]
+  feedback  Feedback[]
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Crop {
@@ -26,7 +29,7 @@ model Crop {
 
 model Symptom {
   id          Int      @id @default(autoincrement())
-  symptomId   String   // e.g., 'yellow_leaves'
+  symptomId   String   
   description String
   cropId      Int
   crop        Crop     @relation(fields: [cropId], references: [id])
@@ -47,7 +50,7 @@ model Disease {
 
 model Rule {
   id                   Int     @id @default(autoincrement())
-  ruleId               String  @unique // e.g., 'rule_001'
+  ruleId               String  @unique 
   cropId               Int
   crop                 Crop    @relation(fields: [cropId], references: [id])
   conditionSymptoms    String
@@ -64,8 +67,19 @@ model Diagnosis {
   date       DateTime @default(now())
   cropId     Int
   crop       Crop     @relation(fields: [cropId], references: [id])
-  symptoms   String // JSON list of symptoms matched
+  symptoms   String  
   diseaseId  Int
   disease    Disease  @relation(fields: [diseaseId], references: [id])
   confidence Float
+  image      String?  // Path to the leaf photo
+}
+
+model Feedback {
+  id          Int      @id @default(autoincrement())
+  userId      Int?
+  user        User?    @relation(fields: [userId], references: [id])
+  diagnosisId Int
+  rating      Int      // 1-5 scale or similar
+  comment     String?
+  createdAt   DateTime @default(now())
 }

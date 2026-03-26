@@ -1,97 +1,103 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 const Register = () => {
+    const { t } = useTranslation();
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
         password: '',
         confirmPassword: ''
     });
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (formData.password !== formData.confirmPassword) {
-            return alert('Passwords do not match');
+            return setError('Passwords do not match');
         }
-        
+        setLoading(true);
+        setError('');
         try {
-            const res = await fetch('/api/auth/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email: formData.email,
-                    password: formData.password,
-                    fullName: formData.fullName
-                })
+            const res = await axios.post('/api/auth/register', {
+                fullName: formData.fullName,
+                email: formData.email,
+                password: formData.password,
+                role: 'FARMER'
             });
-            const data = await res.json();
-            if (res.ok) {
-                alert('Registration successful! Please login.');
-                navigate('/login');
-            } else {
-                alert(data.error || 'Registration failed');
-            }
+            localStorage.setItem('user', JSON.stringify(res.data));
+            navigate('/diagnose');
         } catch (err) {
-            console.error('Registration error:', err);
-            alert('Error connecting to server');
+            setError(err.response?.data?.error || 'Registration failed. Try a different email.');
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="container" style={{ padding: '4rem 0' }}>
-            <div className="diagnosis-form" style={{ maxWidth: '500px' }}>
-                <h2 style={{ marginBottom: '2rem' }}>Create Account</h2>
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label>Full Name</label>
-                        <input 
-                            type="text" 
-                            placeholder="Enter your full name" 
-                            required 
-                            value={formData.fullName}
-                            onChange={(e) => setFormData({...formData, fullName: e.target.value})}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Email Address</label>
-                        <input 
-                            type="email" 
-                            placeholder="Enter your email" 
-                            required 
-                            value={formData.email}
-                            onChange={(e) => setFormData({...formData, email: e.target.value})}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Password</label>
-                        <input 
-                            type="password" 
-                            placeholder="Min 6 characters" 
-                            required 
-                            value={formData.password}
-                            onChange={(e) => setFormData({...formData, password: e.target.value})}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Confirm Password</label>
-                        <input 
-                            type="password" 
-                            placeholder="Confirm your password" 
-                            required 
-                            value={formData.confirmPassword}
-                            onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
-                        />
-                    </div>
-                    <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '1rem' }}>
-                        Register
-                    </button>
-                    <div className="form-link">
-                        Already have an account? <Link to="/login">Login here</Link>
-                    </div>
-                </form>
-            </div>
+        <div className="container" style={{padding: '4rem 0'}}>
+            <form className="diagnosis-form" onSubmit={handleSubmit} style={{maxWidth: '550px'}}>
+                <h2 className="diagnosis-name" style={{border: 'none'}}>Register</h2>
+                {error && <div className="alert alert-error">{error}</div>}
+                <div className="form-group">
+                    <label>Full Name</label>
+                    <input 
+                        type="text" 
+                        name="fullName"
+                        value={formData.fullName} 
+                        onChange={handleChange} 
+                        required 
+                        placeholder="Enter your full name"
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Email Address</label>
+                    <input 
+                        type="email" 
+                        name="email"
+                        value={formData.email} 
+                        onChange={handleChange} 
+                        required 
+                        placeholder="Enter your email"
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Password</label>
+                    <input 
+                        type="password" 
+                        name="password"
+                        value={formData.password} 
+                        onChange={handleChange} 
+                        required 
+                        placeholder="Minimum 6 characters"
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Confirm Password</label>
+                    <input 
+                        type="password" 
+                        name="confirmPassword"
+                        value={formData.confirmPassword} 
+                        onChange={handleChange} 
+                        required 
+                        placeholder="Repeat password"
+                    />
+                </div>
+                <button type="submit" className="btn btn-primary" style={{width: '100%'}} disabled={loading}>
+                    {loading ? 'Registering...' : 'Register'}
+                </button>
+                <div className="form-link">
+                    Already have an account? <Link to="/login">Login here</Link>
+                </div>
+            </form>
         </div>
     );
 };

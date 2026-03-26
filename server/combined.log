@@ -1,0 +1,19 @@
+{"level":"info","message":"User registered: nesheshandrey20@gmail.com"}
+{"level":"warn","message":"Failed login attempt: louisnderitu20@gmail.com"}
+{"level":"info","message":"User registered: louisnderitu20@gmail.com"}
+{"level":"info","message":"User logged in: louisnderitu20@gmail.com"}
+{"level":"warn","message":"Failed login attempt: admin@cropdoctor.com"}
+{"level":"info","message":"User logged in: admin@cropdoctor.com"}
+{"level":"info","message":"User logged in: louisnderitu20@gmail.com"}
+{"level":"info","message":"User logged in: admin@cropdoctor.com"}
+{"level":"info","message":"User logged in: louisnderitu20@gmail.com"}
+{"level":"info","message":"User logged in: louisnderitu20@gmail.com"}
+{"level":"info","message":"User logged in: admin@cropdoctor.com"}
+{"level":"info","message":"User logged in: louisnderitu20@gmail.com"}
+{"level":"error","message":"Diagnosis error: crop is not defined"}
+{"level":"error","message":"Diagnosis error: crop is not defined"}
+{"level":"info","message":"User logged in: admin@cropdoctor.com"}
+{"level":"info","message":"User logged in: admin@cropdoctor.com"}
+{"level":"info","message":"User logged in: admin@cropdoctor.com"}
+{"level":"error","message":"Diagnosis error: \nInvalid `prisma.diagnosis.create()` invocation in\nC:\\Users\\Louis Nderitu\\OneDrive\\Desktop\\CROP DISEASE DIAGNOSIS EXPERT SYSTEM\\Crop-Disease-Diagnosis-Expert-System\\server\\index.js:206:54\n\n  203 const top = result.diagnoses[0];\n  204 const crop = await prisma.crop.findUnique({ where: { name: cropName } });\n  205 \n→ 206 const diagnosis = await prisma.diagnosis.create(\nForeign key constraint violated: `foreign key`"}
+{"level":"info","message":"User logged in: admin@cropdoctor.com"}

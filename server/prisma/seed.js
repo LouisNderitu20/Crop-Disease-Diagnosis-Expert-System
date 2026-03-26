@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
+const bcrypt = require('bcryptjs');
 const prisma = new PrismaClient();
 
 const knowledgeBaseData = {
@@ -32,7 +33,7 @@ const knowledgeBaseData = {
         ],
         beans: [
             { id: 'yellow_leaves', description: 'Yellow leaves' },
-            { id: 'rust_pustules', description: 'Rust-colored pustules' },
+            { id: 'rust_pustules', description: 'Rust colored pustules' },
             { id: 'leaf_spot', description: 'Leaf spots' },
             { id: 'stunted', description: 'Stunted growth' }
         ]
@@ -48,9 +49,9 @@ const knowledgeBaseData = {
                 confidence: 0.85,
                 treatment: [
                     'Remove and destroy infected plants',
-                    'Use certified disease-free seeds',
+                    'Use certified disease free seeds',
                     'Control insect vectors with appropriate pesticides',
-                    'Practice crop rotation with non-host crops'
+                    'Practice crop rotation with non host crops'
                 ],
                 prevention: [
                     'Plant resistant varieties',
@@ -92,7 +93,7 @@ const knowledgeBaseData = {
                 ],
                 prevention: [
                     'Practice crop rotation',
-                    'Use disease-free seeds',
+                    'Use disease free seeds',
                     'Maintain proper plant spacing'
                 ]
             }
@@ -106,12 +107,12 @@ const knowledgeBaseData = {
                 confidence: 0.85,
                 treatment: [
                     'Remove and destroy infected plants',
-                    'Apply copper-based bactericides',
+                    'Apply copper based bactericides',
                     'Improve soil drainage'
                 ],
                 prevention: [
                     'Use resistant varieties',
-                    'Practice crop rotation with non-solanaceous crops',
+                    'Practice crop rotation with non solanaceous crops',
                     'Solarize soil before planting'
                 ]
             }
@@ -149,7 +150,7 @@ const knowledgeBaseData = {
                 ],
                 prevention: [
                     'Use resistant varieties',
-                    'Install insect-proof nets',
+                    'Install insect proof nets',
                     'Monitor and control whiteflies early'
                 ]
             }
@@ -167,7 +168,7 @@ const knowledgeBaseData = {
                     'Harvest immediately if tubers are mature'
                 ],
                 prevention: [
-                    'Use certified disease-free seed potatoes',
+                    'Use certified disease free seed potatoes',
                     'Plant resistant varieties',
                     'Avoid overhead irrigation'
                 ]
@@ -186,7 +187,7 @@ const knowledgeBaseData = {
                     'Store tubers in cool, dry conditions'
                 ],
                 prevention: [
-                    'Use disease-free seed potatoes',
+                    'Use disease free seed potatoes',
                     'Avoid wounding tubers during harvest',
                     'Practice crop rotation'
                 ]
@@ -219,14 +220,14 @@ const knowledgeBaseData = {
                 disease: 'Bean Angular Leaf Spot',
                 confidence: 0.85,
                 treatment: [
-                    'Apply copper-based bactericides',
+                    'Apply copper based bactericides',
                     'Remove infected plant debris',
                     'Practice crop rotation'
                 ],
                 prevention: [
-                    'Use disease-free seeds',
+                    'Use disease free seeds',
                     'Avoid working in wet fields',
-                    'Plant in well-drained soil'
+                    'Plant in well drained soil'
                 ]
             }
         }
@@ -236,11 +237,34 @@ const knowledgeBaseData = {
 async function main() {
     console.log('Start seeding...');
 
+    await prisma.feedback.deleteMany();
     await prisma.diagnosis.deleteMany();
+    await prisma.user.deleteMany();
     await prisma.rule.deleteMany();
     await prisma.symptom.deleteMany();
     await prisma.disease.deleteMany();
     await prisma.crop.deleteMany();
+
+    console.log('Seeding Users...');
+    const hashedPassword = await bcrypt.hash('password123', 10);
+    
+    await prisma.user.create({
+        data: {
+            email: 'admin@cropdoctor.com',
+            password: hashedPassword,
+            fullName: 'System Administrator',
+            role: 'ADMIN'
+        }
+    });
+
+    await prisma.user.create({
+        data: {
+            email: 'farmer@test.com',
+            password: hashedPassword,
+            fullName: 'Test Farmer',
+            role: 'FARMER'
+        }
+    });
 
     for (const cropName of knowledgeBaseData.crops) {
         const crop = await prisma.crop.create({

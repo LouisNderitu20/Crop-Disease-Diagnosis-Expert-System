@@ -1,4 +1,3 @@
-// knowledge-base.js
 const KnowledgeBase = {
     crops: ['maize', 'tomato', 'potato', 'beans'],
 
@@ -30,7 +29,7 @@ const KnowledgeBase = {
         ],
         beans: [
             { id: 'yellow_leaves', description: 'Yellow leaves' },
-            { id: 'rust_pustules', description: 'Rust-colored pustules' },
+            { id: 'rust_pustules', description: 'Rust colored pustules' },
             { id: 'leaf_spot', description: 'Leaf spots' },
             { id: 'stunted', description: 'Stunted growth' }
         ]
@@ -46,9 +45,9 @@ const KnowledgeBase = {
                 confidence: 0.85,
                 treatment: [
                     'Remove and destroy infected plants',
-                    'Use certified disease-free seeds',
+                    'Use certified disease free seeds',
                     'Control insect vectors with appropriate pesticides',
-                    'Practice crop rotation with non-host crops'
+                    'Practice crop rotation with non host crops'
                 ],
                 prevention: [
                     'Plant resistant varieties',
@@ -90,7 +89,7 @@ const KnowledgeBase = {
                 ],
                 prevention: [
                     'Practice crop rotation',
-                    'Use disease-free seeds',
+                    'Use disease free seeds',
                     'Maintain proper plant spacing'
                 ]
             }
@@ -104,12 +103,12 @@ const KnowledgeBase = {
                 confidence: 0.85,
                 treatment: [
                     'Remove and destroy infected plants',
-                    'Apply copper-based bactericides',
+                    'Apply copper based bactericides',
                     'Improve soil drainage'
                 ],
                 prevention: [
                     'Use resistant varieties',
-                    'Practice crop rotation with non-solanaceous crops',
+                    'Practice crop rotation with non solanaceous crops',
                     'Solarize soil before planting'
                 ]
             }
@@ -147,7 +146,7 @@ const KnowledgeBase = {
                 ],
                 prevention: [
                     'Use resistant varieties',
-                    'Install insect-proof nets',
+                    'Install insect proof nets',
                     'Monitor and control whiteflies early'
                 ]
             }
@@ -165,7 +164,7 @@ const KnowledgeBase = {
                     'Harvest immediately if tubers are mature'
                 ],
                 prevention: [
-                    'Use certified disease-free seed potatoes',
+                    'Use certified disease free seed potatoes',
                     'Plant resistant varieties',
                     'Avoid overhead irrigation'
                 ]
@@ -184,7 +183,7 @@ const KnowledgeBase = {
                     'Store tubers in cool, dry conditions'
                 ],
                 prevention: [
-                    'Use disease-free seed potatoes',
+                    'Use disease free seed potatoes',
                     'Avoid wounding tubers during harvest',
                     'Practice crop rotation'
                 ]
@@ -217,14 +216,14 @@ const KnowledgeBase = {
                 disease: 'Bean Angular Leaf Spot',
                 confidence: 0.85,
                 treatment: [
-                    'Apply copper-based bactericides',
+                    'Apply copper based bactericides',
                     'Remove infected plant debris',
                     'Practice crop rotation'
                 ],
                 prevention: [
-                    'Use disease-free seeds',
+                    'Use disease free seeds',
                     'Avoid working in wet fields',
-                    'Plant in well-drained soil'
+                    'Plant in well drained soil'
                 ]
             }
         }
@@ -233,24 +232,24 @@ const KnowledgeBase = {
     generalAdvice: {
         maize: 'Maize requires adequate nitrogen. Yellowing may indicate nitrogen deficiency.',
         tomato: 'Tomatoes need consistent watering. Fluctuations can cause blossom end rot.',
-        potato: 'Potatoes are susceptible to soil-borne diseases. Rotate crops every 2-3 years.',
+        potato: 'Potatoes are susceptible to soil borne diseases. Rotate crops every 2-3 years.',
         beans: 'Beans fix their own nitrogen. Avoid excess nitrogen fertilizer.'
     },
 
-    getRulesForCrop: function(cropType) {
+    getRulesForCrop: function (cropType) {
         return this.rules.filter(rule => rule.crop === cropType);
     },
 
-    getSymptomsForCrop: function(cropType) {
+    getSymptomsForCrop: function (cropType) {
         return this.symptoms[cropType] || [];
     },
 
-    addRule: function(newRule) {
+    addRule: function (newRule) {
         this.rules.push(newRule);
         return true;
     },
 
-    updateRule: function(ruleId, updatedRule) {
+    updateRule: function (ruleId, updatedRule) {
         const index = this.rules.findIndex(rule => rule.id === ruleId);
         if (index !== -1) {
             this.rules[index] = updatedRule;

@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import ExplanationFacility from '../logic/explanation-facility';
+import axios from 'axios';
+import jsPDF from 'jspdf';
 
 const Diagnose = () => {
     const [crops, setCrops] = useState([]);
     const [crop, setCrop] = useState('');
     const [symptoms, setSymptoms] = useState([]);
-    const [envFactors, setEnvFactors] = useState({
-        high_humidity: false,
-        recent_rain: false
-    });
+    const [envFactors, setEnvFactors] = useState({ high_humidity: false, recent_rain: false });
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState(null);
-    const [explanation, setExplanation] = useState(null);
+    const [showFeedback, setShowFeedback] = useState(false);
+    const [feedback, setFeedback] = useState({ rating: 5, comment: '' });
 
     useEffect(() => {
         fetch('/api/crops')
@@ -27,10 +26,8 @@ const Diagnose = () => {
     };
 
     const handleSymptomToggle = (symptomId) => {
-        setSymptoms(prev =>
-            prev.includes(symptomId)
-                ? prev.filter(id => id !== symptomId)
-                : [...prev, symptomId]
+        setSymptoms(prev => 
+            prev.includes(symptomId) ? prev.filter(id => id !== symptomId) : [...prev, symptomId]
         );
     };
 
@@ -47,24 +44,13 @@ const Diagnose = () => {
         const user = JSON.parse(localStorage.getItem('user') || 'null');
 
         try {
-            const response = await fetch('/api/diagnose', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    crop,
-                    symptoms,
-                    environmental: envFactors,
-                    userId: user?.id
-                })
+            const response = await axios.post('/api/diagnose', {
+                crop,
+                symptoms: JSON.stringify(symptoms),
+                environmental: JSON.stringify(envFactors),
+                userId: user?.id
             });
-
-            const diagResult = await response.json();
-
-            const explainer = new ExplanationFacility();
-            const diagExplanation = explainer.generateExplanation(diagResult, { crop, symptoms, environmental: envFactors });
-
-            setResult(diagResult);
-            setExplanation(diagExplanation);
+            setResult(response.data);
         } catch (err) {
             console.error('Diagnosis error:', err);
             alert('Error performing diagnosis. Check if server is running.');
@@ -75,9 +61,50 @@ const Diagnose = () => {
 
     const resetDiagnosis = () => {
         setResult(null);
-        setExplanation(null);
         setCrop('');
         setSymptoms([]);
+        setEnvFactors({ high_humidity: false, recent_rain: false });
+    };
+
+    const exportPDF = () => {
+        const doc = jsPDF();
+        doc.setFontSize(20);
+        doc.text("Crop Diagnosis Report", 20, 20);
+        doc.setFontSize(12);
+        doc.text(`Crop: ${crop}`, 20, 30);
+        doc.text(`Date: ${new Date().toLocaleString()}`, 20, 40);
+        
+        let y = 50;
+        result.diagnoses.forEach((diag, i) => {
+            doc.setFont(undefined, 'bold');
+            doc.text(`${i+1}. ${diag.disease} (${Math.round(diag.confidence * 100)}%)`, 20, y);
+            doc.setFont(undefined, 'normal');
+            y += 10;
+            doc.text("Treatment:", 25, y);
+            y += 5;
+            diag.treatment.forEach(tr => {
+                doc.text(`- ${tr}`, 30, y);
+                y += 5;
+            });
+            y += 10;
+        });
+        doc.save("diagnosis_report.pdf");
+    };
+
+    const submitFeedback = async () => {
+        const user = JSON.parse(localStorage.getItem('user') || 'null');
+        try {
+            await axios.post('/api/feedback', {
+                userId: user?.id,
+                diagnosisId: result.diagnosisId,
+                rating: feedback.rating,
+                comment: feedback.comment
+            });
+            alert('Feedback submitted!');
+            setShowFeedback(false);
+        } catch (err) {
+            console.error('Feedback error:', err);
+        }
     };
 
     const selectedCropData = crops.find(c => c.name === crop);
@@ -89,7 +116,7 @@ const Diagnose = () => {
                 <select id="cropSelect" value={crop} onChange={handleCropChange} required>
                     <option value=""> Choose a crop </option>
                     {crops.map(c => (
-                        <option key={c.id} value={c.name}>{c.name.charAt(0).toUpperCase() + c.name.slice(1)}</option>
+                        <option key={c.id} value={c.name}>{c.name}</option>
                     ))}
                 </select>
             </div>
@@ -123,21 +150,17 @@ const Diagnose = () => {
                     <div className="symptom-options">
                         <div className="symptom-option">
                             <input
-                                type="checkbox"
-                                id="high_humidity"
-                                checked={envFactors.high_humidity}
+                                type="checkbox" id="high_humidity" checked={envFactors.high_humidity}
                                 onChange={() => handleEnvToggle('high_humidity')}
                             />
-                            <label htmlFor="high_humidity">High humidity conditions</label>
+                            <label htmlFor="high_humidity">High humidity</label>
                         </div>
                         <div className="symptom-option">
                             <input
-                                type="checkbox"
-                                id="recent_rain"
-                                checked={envFactors.recent_rain}
+                                type="checkbox" id="recent_rain" checked={envFactors.recent_rain}
                                 onChange={() => handleEnvToggle('recent_rain')}
                             />
-                            <label htmlFor="recent_rain">Recent rainfall</label>
+                            <label htmlFor="recent_rain">Recent rain</label>
                         </div>
                     </div>
                 </div>
@@ -149,72 +172,81 @@ const Diagnose = () => {
         </form>
     );
 
-    const renderResults = () => {
-        const topDiagnosis = result.diagnoses[0];
-
-        return (
-            <div className="diagnosis-card">
-                {!topDiagnosis ? (
-                    <div className="alert alert-info">
-                        <h3>No Specific Disease Found</h3>
-                        <p>Based on the symptoms provided, no matching disease was identified.</p>
-                        <div className="explanation-box">
-                            <h4>Possible Reasons:</h4>
-                            <ul>
-                                <li>Nutrient deficiency in soil</li>
-                                <li>Environmental stress (drought or excess water)</li>
-                                <li>Pest damage without disease</li>
-                                <li>Rare or new disease not in database</li>
-                            </ul>
-                        </div>
-                    </div>
-                ) : (
-                    <div>
-                        <h3 className="diagnosis-name">{topDiagnosis.disease}</h3>
-                        <div className="alert alert-success">
-                            <strong>Confidence Level:</strong> {Math.round(topDiagnosis.confidence * 100)}%
-                        </div>
-
-                        <div className="treatment-section">
-                            <h4>Recommended Treatment:</h4>
-                            <ul>
-                                {topDiagnosis.treatment.map((t, i) => <li key={i}>{t}</li>)}
-                            </ul>
-                        </div>
-
-                        <div className="treatment-section">
-                            <h4>Prevention Measures:</h4>
-                            <ul>
-                                {topDiagnosis.prevention.map((p, i) => <li key={i}>{p}</li>)}
-                            </ul>
-                        </div>
-
-                        <div className="explanation-section">
-                            <h4>How We Reached This Conclusion:</h4>
-                            <div className="explanation-box">
-                                <p>{explanation.summary.ruleExplanation}</p>
+    const renderResults = () => (
+        <div className="diagnosis-card">
+            {result.diagnoses.length === 0 ? (
+                <div className="alert alert-info">
+                    <h3>No Specific Disease Found</h3>
+                    <p>No matching disease was identified. Try adding more symptoms.</p>
+                </div>
+            ) : (
+                <div>
+                    <h2 style={{textAlign: 'center', marginBottom: '20px'}}>Diagnosis Results</h2>
+                    {result.diagnoses.map((diag, index) => (
+                        <div key={index} style={{marginBottom: '30px', borderBottom: index < result.diagnoses.length - 1 ? '1px solid #eee' : 'none', paddingBottom: '20px'}}>
+                            <h3 className="diagnosis-name">{diag.disease}</h3>
+                            <div className={`alert ${index === 0 ? 'alert-success' : 'alert-warning'}`}>
+                                <strong>Confidence:</strong> {Math.round(diag.confidence * 100)}%
                             </div>
-                        </div>
 
-                        {explanation.educational && (
-                            <div className="educational-section">
-                                <h4>Learn More:</h4>
-                                <p>{explanation.educational.description}</p>
+                            <div className="treatment-section">
+                                <h4>Recommended Treatment:</h4>
                                 <ul>
-                                    {explanation.educational.tips?.map((t, i) => <li key={i}>{t}</li>)}
+                                    {diag.treatment.map((t, i) => <li key={i}>{t}</li>)}
                                 </ul>
                             </div>
-                        )}
-                    </div>
-                )}
 
-                <div className="diagnosis-actions">
-                    <button onClick={resetDiagnosis} className="btn btn-primary">Diagnose Another Crop</button>
-                    <button onClick={() => window.print()} className="btn btn-primary">Print Results</button>
+                            <div className="treatment-section">
+                                <h4>Prevention Measures:</h4>
+                                <ul>
+                                    {diag.prevention.map((p, i) => <li key={i}>{p}</li>)}
+                                </ul>
+                            </div>
+                        </div>
+                    ))}
+
+                    {result.clarifyingQuestions?.length > 0 && (
+                        <div className="alert alert-info">
+                            <h4>Clarifying Questions</h4>
+                            <p>Improve accuracy by checking these:</p>
+                            <div style={{display: 'flex', gap: '10px', marginTop: '10px', flexWrap: 'wrap'}}>
+                                {result.clarifyingQuestions.map((q, i) => {
+                                    const description = selectedCropData?.symptoms.find(s => s.symptomId === q)?.description || 
+                                                       q.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+                                    return (
+                                        <button key={i} onClick={() => handleSymptomToggle(q)} className="btn btn-secondary" style={{padding: '5px 10px', fontSize: '0.8rem'}}>
+                                            {description}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
                 </div>
+            )}
+
+            <div className="diagnosis-actions" style={{marginTop: '2rem'}}>
+                <button onClick={resetDiagnosis} className="btn btn-primary">Diagnose Another Crop</button>
+                <button onClick={exportPDF} className="btn btn-primary">Export PDF</button>
+                <button onClick={() => setShowFeedback(true)} className="btn btn-secondary">Feedback</button>
             </div>
-        );
-    };
+
+            {showFeedback && (
+                <div style={{marginTop: '20px', padding: '20px', background: '#f9f9f9', borderRadius: '10px'}}>
+                    <h4>Give Us Feedback</h4>
+                    <div className="form-group">
+                        <label>Rating (1-5)</label>
+                        <input type="number" min="1" max="5" value={feedback.rating} onChange={(e) => setFeedback({...feedback, rating: e.target.value})} />
+                    </div>
+                    <div className="form-group">
+                        <label>Comments</label>
+                        <textarea value={feedback.comment} onChange={(e) => setFeedback({...feedback, comment: e.target.value})} />
+                    </div>
+                    <button onClick={submitFeedback} className="btn btn-primary">Submit</button>
+                </div>
+            )}
+        </div>
+    );
 
     return (
         <div className="container" style={{ padding: '2rem 0' }}>
